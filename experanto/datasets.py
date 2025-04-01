@@ -336,7 +336,7 @@ class ChunkDataset(Dataset):
             cache_data=cache_data,
         )
         self.device_names = self._experiment.device_names
-        self.out_keys = out_keys or self.device_names
+        self.out_keys = out_keys
         self.start_time, self.end_time = self._experiment.get_valid_range("screen")
         self._read_trials()
         self.initialize_statistics()
@@ -586,8 +586,8 @@ class ChunkDataset(Dataset):
         if self.add_behavior_as_channels:
             out = add_behavior_as_channels(out)
 
-        # remove any keys that are not in the out_keys
-        out = {k: out[k] for k in self.out_keys if k in out}
+        if self.out_keys is not None:
+            out = {k: out[k] for k in self.out_keys if k in out}
 
         return out
 
